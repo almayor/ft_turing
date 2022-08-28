@@ -1,6 +1,7 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Eta reduce" #-}
-module Tape where
+
+module Tape (Tape(..), blankTape, writeTape, moveLeft, moveRight, slice) where
 
 import Prettyprinter
 
@@ -18,6 +19,9 @@ blankTape blank = Tape {
     lSide       = repeat blank,
     rSide       = repeat blank
 }
+
+writeTape :: a -> Tape a -> Tape a
+writeTape x tape = tape {focus = x}
 
 moveLeft :: Tape a -> Tape a
 moveLeft (Tape fcs idx (l:ls) rs) = Tape l (idx - 1) ls (fcs:rs)

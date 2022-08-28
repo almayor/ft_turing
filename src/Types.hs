@@ -3,11 +3,10 @@
 
 module Types where
 
+import Prelude hiding (read)
 import GHC.Generics
 import Data.Aeson
 import Data.Map (Map)
-
-import Tape
 
 type StateName = String
 type Symbol = String
@@ -31,5 +30,3 @@ data Specification = Specification {
     finals      :: [StateName],
     transitions :: Map StateName [Transition]
 }  deriving (Eq, Show, Generic, ToJSON, FromJSON)
-
-type MachineState = (Tape Symbol, StateName)

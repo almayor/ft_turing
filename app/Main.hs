@@ -14,7 +14,7 @@ main = run `catchError` handler where
     run = do
         args <- getArgs
         contents <- B.readFile (head args)
-        let specif = eitherDecode contents :: Either String Specif
+        let specif = eitherDecode contents :: Either String Specification
         print specif
         -- maybe (putStrLn "couldn't parse") print specif 
 
