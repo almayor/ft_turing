@@ -40,31 +40,37 @@ instance Pretty Action where
 
 instance Pretty Specification where
     pretty spec = vsep
-        [ printName
+        [ stimes w ast
+        , ast <> stimes (w - 2) space <> ast
+        , printName
+        , ast <> stimes (w - 2) space <> ast
+        , stimes w ast
         , pretty "Alphabet:" <+> prettyList' (alphabet spec)
         , pretty "States:" <+> prettyList' (states spec)
         , pretty "Initial:" <+> pretty (initial spec)
         , pretty "Finals:" <+> prettyList' (finals spec)
         , pretty "Transitions:"
-        , indent 2 . vsep . map printTransitions . toList $ transitions spec ]
+        , indent 2 . vsep . map printTransitions . toList $ transitions spec
+        , stimes w ast ]
+        
         where
-        prettyList' = encloseSep' "[ " " ]" ", " . map pretty
-        encloseSep' a b c = encloseSep (pretty a) (pretty b) (pretty c)
-        printTransition from_state (Transition {read, write, to_state, action}) =
-                pretty (from_state, read)
-            <+> pretty "->"
-            <+> pretty (to_state, write, action)
-        printTransitions (state, transitions) =
-            vsep $ map (printTransition state) transitions
-        printName =
-            let ast = pretty '*'
-                w = 80 :: Int
-                nameWidth = length (name spec)
-                pad = (w - nameWidth) `div` 2
-            in vsep
-            [ stimes w ast
-            , ast <> fill (w - 2) (stimes pad space <> pretty (name spec)) <> ast
-            , stimes w ast ]
+            ast = pretty '*'
+            w = 80 :: Int
+            prettyList' = encloseSep (pretty "[ ") (pretty " ]") (pretty ", ")
+                        . map pretty
+            printTransition from_state
+                (Transition {read, write, to_state, action}) =
+                    pretty (from_state, read)
+                <+> pretty "->"
+                <+> pretty (to_state, write, action)
+            printTransitions (state, transitions) =
+                vsep $ map (printTransition state) transitions
+            printName =
+                let nameWidth = length (name spec)
+                    pad = (w - nameWidth) `div` 2
+                in ast
+                <> fill (w - 2) (stimes pad space <> pretty (name spec))
+                <> ast
             
 
         

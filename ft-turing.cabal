@@ -25,7 +25,9 @@ source-repository head
 
 library
   exposed-modules:
+      Checker
       Engine
+      Main2
       Tape
       Types
   other-modules:

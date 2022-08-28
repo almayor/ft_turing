@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Eta reduce" #-}
 
-module Tape (Tape(..), blankTape, writeTape, moveLeft, moveRight, slice) where
+module Tape where
 
 import Prettyprinter
 
@@ -12,24 +12,30 @@ data Tape a = Tape {
     rSide       :: [a]
 } deriving (Show, Eq)
 
-blankTape :: a -> Tape a
-blankTape blank = Tape {
-    focus       = blank,
-    index       = 0,
-    lSide       = repeat blank,
-    rSide       = repeat blank
+makeTape :: a -> [a] -> Tape a
+makeTape blank (fcs:rs) = Tape {
+    focus = fcs,
+    index = 0,
+    lSide = repeat blank,
+    rSide = rs ++ repeat blank
+}
+makeTape blank [] = Tape {
+    focus = blank,
+    index = 0,
+    lSide = repeat blank,
+    rSide = repeat blank
 }
 
 writeTape :: a -> Tape a -> Tape a
 writeTape x tape = tape {focus = x}
 
-moveLeft :: Tape a -> Tape a
-moveLeft (Tape fcs idx (l:ls) rs) = Tape l (idx - 1) ls (fcs:rs)
-moveLeft _ = error "Impossible! Infinite tape is empty!"
+moveL :: Tape a -> Tape a
+moveL (Tape fcs idx (l:ls) rs) = Tape l (idx - 1) ls (fcs:rs)
+moveL _ = error "Impossible! Infinite tape is empty!"
 
-moveRight :: Tape a -> Tape a
-moveRight (Tape fcs idx ls (r:rs)) = Tape r (idx + 1) (fcs:ls) rs
-moveRight _ = error "Impossible! Infinite tape is empty!"
+moveR :: Tape a -> Tape a
+moveR (Tape fcs idx ls (r:rs)) = Tape r (idx + 1) (fcs:ls) rs
+moveR _ = error "Impossible! Infinite tape is empty!"
 
 instance Functor Tape where
     fmap f tape = tape {
@@ -40,8 +46,8 @@ instance Functor Tape where
 
 data TapeSlice a = TapeSlice (Tape a) Integer Integer
 
-slice :: Tape a -> Integer -> Integer -> TapeSlice a
-slice tape lo hi = TapeSlice tape lo hi
+sliceTape :: Integer -> Integer -> Tape a -> TapeSlice a
+sliceTape lo hi tape = TapeSlice tape lo hi
               
 instance Eq a => Eq (TapeSlice a) where
     TapeSlice t1 lo1 hi1 == TapeSlice t2 lo2 hi2 =
@@ -57,6 +63,6 @@ instance (Pretty a, Monoid a) => Pretty (TapeSlice a) where
         let (Tape fcs idx ls rs) = tape
             take' = take . fromIntegral
         in brackets $
-           pretty (mconcat $ take' (idx - lo) ls)
+           pretty (mconcat . reverse $ take' (idx - lo) ls)
         <> (if idx > hi || idx < lo then mempty else angles $ pretty fcs)
         <> pretty (mconcat $ take' (hi - idx) rs)
