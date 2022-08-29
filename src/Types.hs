@@ -9,8 +9,12 @@ import GHC.Generics
 import Data.Aeson
 import Data.Map (Map, toList)
 import Data.Semigroup (stimes)
-
+import Control.Monad.Except
+import Control.Monad.State
+import Control.Monad.Reader
 import Prettyprinter
+
+import Tape
 
 type StateName = String
 type Symbol = String
@@ -63,15 +67,29 @@ instance Pretty Specification where
                     pretty (from_state, read)
                 <+> pretty "->"
                 <+> pretty (to_state, write, action)
-            printTransitions (state, transitions) =
-                vsep $ map (printTransition state) transitions
+            printTransitions (stateName, transitions) =
+                vsep $ map (printTransition stateName) transitions
             printName =
                 let nameWidth = length (name spec)
                     pad = (w - nameWidth) `div` 2
                 in ast
                 <> fill (w - 2) (stimes pad space <> pretty (name spec))
                 <> ast
-            
+
+data MachineState = MachineState {
+    tape      :: Tape Symbol,
+    stateName :: StateName,
+    stats     :: Stats
+}
+
+data Stats = Stats {
+    nSteps    :: Integer,
+    minIndex  :: Integer,
+    maxIndex  :: Integer
+}  deriving (Eq, Show)
+
+type Engine a = ReaderT Specification (StateT MachineState (ExceptT String IO)) a
+
 
         
 

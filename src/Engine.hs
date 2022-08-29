@@ -1,4 +1,4 @@
-{-# LANGUAGE NamedFieldPuns #-}
+ {-# LANGUAGE NamedFieldPuns #-}
 
 module Engine (runEngine) where
 
@@ -13,20 +13,6 @@ import Types
 import Tape
 import Data.List (find)
 import System.IO (hPutStrLn, stderr)
-
-data MachineState = MachineState {
-    tape      :: Tape Symbol,
-    stateName :: StateName,
-    stats     :: Stats
-}
-
-data Stats = Stats {
-    nSteps    :: Integer,
-    minIndex  :: Integer,
-    maxIndex  :: Integer
-}  deriving (Eq, Show)
-
-type Engine a = ReaderT Specification (StateT MachineState (ExceptT String IO)) a
 
 getTransition :: Engine Transition
 getTransition = do
