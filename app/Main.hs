@@ -35,13 +35,10 @@ main = run `catchError` handler
         args <- getArgs
         let helpRequested = "--help" `elem` args || "-h" `elem` args
         when (length args /= 2 || helpRequested) printUsage
-        let fName   = head args
+        
         let program = map (:[]) (args !! 1)
-        contents <- B.readFile fName
-        case eitherDecode contents of
-            Left e -> handler e
-            Right s -> do
-                result <- runEngine s program
-                case result of
-                    Left s -> hPutStrLn stderr s >> exitFailure
-                    Right _ -> exitSuccess
+        description <- B.readFile $ head args
+        let specification = eitherDecode description >>= validate
+        case specification of 
+            Left msg     -> hPutStrLn stderr msg >> exitFailure
+            Right specif -> runEngine specif program

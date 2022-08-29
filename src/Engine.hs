@@ -12,6 +12,7 @@ import Prettyprinter
 import Types
 import Tape
 import Data.List (find)
+import System.IO (hPutStrLn, stderr)
 
 data MachineState = MachineState {
     tape      :: Tape Symbol,
@@ -53,7 +54,7 @@ next = do
     when (isStuck specif stats) $ throwError "Machine has stuck"
     transition@(Transition _ c1 stateName1 action) <- getTransition
     logTransition stateName0 transition
-    let tape'  = writeTape c1 tape0
+    let tape' = writeTape c1 tape0
     let tape1 = case action of
             LEFT  -> moveL tape'
             RIGHT -> moveR tape'
@@ -81,10 +82,11 @@ engine = do
             Specification {finals}   <- ask
             return $ stateName `elem` finals
 
-runEngine :: Specification -> [Symbol] -> IO (Either String ())
+runEngine :: Specification -> [Symbol] -> IO ()
 runEngine specif@(Specification {blank, initial}) program = do
     let engine' = (liftIO . print $ pretty specif) >> engine
     runExceptT $ evalStateT (runReaderT engine' specif) initState
+    >>= either (hPutStrLn stderr) return
     where
         initState :: MachineState
         initState =
@@ -92,38 +94,5 @@ runEngine specif@(Specification {blank, initial}) program = do
                 initStats = Stats 
                     { nSteps = 0
                     , minIndex = -5
-                    , maxIndex = fromIntegral $ length program + 5}
+                    , maxIndex = fromIntegral $ length program + 5 }
             in MachineState initTape initial initStats
-
--- x :: Engine ()
--- x = evalStateT (runReaderT engine spec0) 
---     where
---     engine = runEngine [".", ".", "."]
---     spec0 = Specification {
---         name="unary_sub",
---         alphabet=["1", ".", "-", "="],
---         blank=".",
---         states=["scanright", "eraseone", "subone", "skip", "HALT"],
---         initial="scanright",
---         finals=["HALT"],
---         transitions=M.fromList [
---             ("scanright", [
---                 Transition "." "." "scanright" RIGHT,
---                 Transition "1" "1" "scanright" RIGHT,
---                 Transition "-" "-" "scanright" RIGHT,
---                 Transition "=" "." "eraseone" LEFT
---             ]),
---             ("eraseone", [
---                 Transition "1" "=" "subone" LEFT,
---                 Transition "-" "." "HALT" LEFT
---             ]),
---             ("subone", [
---                 Transition "1" "1" "subone" LEFT,
---                 Transition "-" "-" "skip" LEFT
---             ]),
---             ("skip", [
---                 Transition "." "." "skip" LEFT,
---                 Transition "1" "." "scanright" RIGHT
---             ])
---         ]
---     }
