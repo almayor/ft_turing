@@ -1,17 +1,19 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE NamedFieldPuns #-}
+{-# OPTIONS_GHC -Wno-missing-export-lists #-}
+{-# LANGUAGE DerivingStrategies #-}
 
 module Types where
 
 import Prelude hiding (read)
-import GHC.Generics
-import Data.Aeson
+import GHC.Generics ( Generic )
+import Data.Aeson ( FromJSON, ToJSON )
 import Data.Map (Map, toList)
 import Data.Semigroup (stimes)
-import Control.Monad.Except
-import Control.Monad.State
-import Control.Monad.Reader
+import Control.Monad.Except ( ExceptT )
+import Control.Monad.State ( StateT )
+import Control.Monad.Reader ( ReaderT )
 import Prettyprinter
 
 import Tape
@@ -43,18 +45,18 @@ instance Pretty Action where
     pretty = pretty . show
 
 instance Pretty Specification where
-    pretty spec = vsep
+    pretty specif = vsep
         [ stimes w ast
         , ast <> stimes (w - 2) space <> ast
         , printName
         , ast <> stimes (w - 2) space <> ast
         , stimes w ast
-        , pretty "Alphabet:" <+> prettyList' (alphabet spec)
-        , pretty "States:" <+> prettyList' (states spec)
-        , pretty "Initial:" <+> pretty (initial spec)
-        , pretty "Finals:" <+> prettyList' (finals spec)
+        , pretty "Alphabet:" <+> prettyList' (alphabet specif)
+        , pretty "States:"   <+> prettyList' (states specif)
+        , pretty "Initial:"  <+> pretty (initial specif)
+        , pretty "Finals:"   <+> prettyList' (finals specif)
         , pretty "Transitions:"
-        , indent 2 . vsep . map printTransitions . toList $ transitions spec
+        , indent 2 . vsep . map printTransitions . toList $ transitions specif
         , stimes w ast ]
         
         where
@@ -70,10 +72,10 @@ instance Pretty Specification where
             printTransitions (stateName, transitions) =
                 vsep $ map (printTransition stateName) transitions
             printName =
-                let nameWidth = length (name spec)
+                let nameWidth = length (name specif)
                     pad = (w - nameWidth) `div` 2
                 in ast
-                <> fill (w - 2) (stimes pad space <> pretty (name spec))
+                <> fill (w - 2) (stimes pad space <> pretty (name specif))
                 <> ast
 
 data MachineState = MachineState {

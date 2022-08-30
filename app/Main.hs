@@ -1,18 +1,19 @@
  {-# LANGUAGE NamedFieldPuns #-}
-module Main where
-
-import Data.Aeson
-import qualified Data.ByteString.Lazy as B
-import System.Environment
+module Main (main) where
 
 import Types
 import Engine
 
 import Prelude hiding (read)
-import Control.Monad.Except
+import Data.Aeson
+import qualified Data.ByteString.Lazy as B
+import qualified Data.Map as M
 import System.Exit (exitFailure)
 import System.IO (hPutStrLn, stderr, hPrint)
-import qualified Data.Map as M
+import System.Environment (getArgs, getProgName)
+import Control.Monad.Except
+
+
 
 printUsage :: IO a
 printUsage = do

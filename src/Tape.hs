@@ -1,4 +1,4 @@
-module Tape where
+module Tape (Tape(..), TapeSlice(), makeTape, sliceTape, writeTape, moveL, moveR) where
 
 import Prettyprinter
 
