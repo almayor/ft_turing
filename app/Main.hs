@@ -31,8 +31,7 @@ printUsage = do
 
 validate :: [Symbol] -> Specification -> Either String Specification
 validate program specif@(Specification{name, alphabet, blank, states,
-                                       initial, finals, transitions}) = do
-                                
+                                       initial, finals, transitions}) = do        
     when (null name) $ Left "Program name cannot be empty"
     when (null initial) $ Left "There must be an initial state"
     when (null finals) $ Left "There must be at least one final state"
