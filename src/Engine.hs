@@ -63,7 +63,7 @@ next = do
 engine :: Engine ()
 engine = do
     halted <- hasHalted
-    if halted then return () else next >> engine
+    if halted then next else next >> engine
     where
         hasHalted :: Engine Bool
         hasHalted = do
