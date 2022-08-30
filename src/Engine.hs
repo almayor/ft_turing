@@ -23,7 +23,7 @@ data Stats = Stats {
     nSteps    :: Integer,
     minIndex  :: Integer,
     maxIndex  :: Integer
-}  deriving (Eq, Show)
+}
 
 type Engine a = ReaderT Specification (StateT MachineState (ExceptT String IO)) a
 

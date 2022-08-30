@@ -56,17 +56,14 @@ validate program specif@(Specification{name, alphabet, blank, states,
     return specif
 
 main :: IO ()
-main = run `catchError` handler
-    where
-    handler e = hPrint stderr e >> exitFailure
-    run = do
-        args <- getArgs
-        let helpRequested = "--help" `elem` args || "-h" `elem` args
-        when (length args /= 2 || helpRequested) printUsage
+main = do
+    args <- getArgs
+    let helpRequested = "--help" `elem` args || "-h" `elem` args
+    when (length args /= 2 || helpRequested) printUsage
 
-        description <- B.readFile $ head args
-        let program = map Symbol $ args !! 1
-        let specification = eitherDecode description >>= validate program
-        case specification of 
-            Left msg     -> hPutStrLn stderr msg >> exitFailure
-            Right specif -> runEngine specif program
+    description <- B.readFile $ head args
+    let program = map Symbol $ args !! 1
+    let specification = eitherDecode description >>= validate program
+    case specification of 
+        Left msg     -> hPutStrLn stderr msg >> exitFailure
+        Right specif -> runEngine specif program
