@@ -59,7 +59,12 @@ instance (Pretty a, Monoid a) => Pretty (TapeSlice a) where
     pretty (TapeSlice tape lo hi) =
         let (Tape fcs idx ls rs) = tape
             take' = take . fromIntegral
+            colorBackRed = pretty "\x1b[41m"
+            colorBrightWhite = pretty "\x1b[1;32m" 
+            colorReset = pretty "\x1b[0m"
         in brackets $
            pretty (mconcat . reverse $ take' (idx - lo) ls)
-        <> (if idx > hi || idx < lo then mempty else angles $ pretty fcs)
+        <> colorBrightWhite <> colorBackRed
+        <> (if idx > hi || idx < lo then mempty else pretty fcs)
+        <> colorReset
         <> pretty (mconcat $ take' (hi - idx) rs)

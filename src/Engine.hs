@@ -8,11 +8,12 @@ import Control.Monad.State
 import Control.Monad.Reader
 import qualified Data.Map as M
 import Prettyprinter
+import Prettyprinter.Util (putDocW)
+import System.IO (hPutStrLn, stderr)
 
 import Types
 import Tape
 import Data.List (find)
-import System.IO (hPutStrLn, stderr)
 
 getTransition :: Engine Transition
 getTransition = do
@@ -27,11 +28,13 @@ getTransition = do
 logTransition :: StateName -> Transition -> Engine ()
 logTransition stateName0 (Transition c0 c1 stateName1 action) = do
     MachineState {tape, stats} <- get
-    let Stats {minIndex, maxIndex} = stats
-    liftIO . print $ pretty (sliceTape minIndex maxIndex tape)
+    let Stats {nSteps, minIndex, maxIndex} = stats
+    liftIO . putDocW 100 $ fill 2 (pretty nSteps)
+                 <+> pretty (sliceTape minIndex maxIndex tape)
                  <+> pretty (stateName0, c0)
                  <+> pretty "->"
                  <+> pretty (stateName1, c1, action)
+                 <+> line  
 
 next :: Engine ()
 next = do
@@ -71,14 +74,18 @@ engine = do
 runEngine :: Specification -> [Symbol] -> IO ()
 runEngine specif@(Specification {blank, initial}) program = do
     let engine' = (liftIO . print $ pretty specif) >> engine
-    runExceptT $ evalStateT (runReaderT engine' specif) initState
-    >>= either (hPutStrLn stderr) return
+    result <- runExceptT $ execStateT (runReaderT engine' specif) initState
+    either (hPutStrLn stderr) printStats $ stats <$> result
     where
         initState :: MachineState
         initState =
             let initTape  = makeTape blank program
                 initStats = Stats 
                     { nSteps = 0
-                    , minIndex = -5
+                    , minIndex = -3
                     , maxIndex = fromIntegral $ length program + 5 }
             in MachineState initTape initial initStats
+        printStats :: Stats -> IO ()
+        printStats Stats {nSteps, minIndex, maxIndex} = print . pretty $
+                "\nUsed: " ++ show nSteps ++ " steps, "
+                           ++ show (maxIndex - minIndex) ++ " tape cells"
