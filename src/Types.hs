@@ -1,35 +1,33 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# OPTIONS_GHC -Wno-missing-export-lists #-}
 {-# LANGUAGE DerivingStrategies #-}
-
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# OPTIONS_GHC -Wno-missing-export-lists #-}
 module Types where
 
-import Prelude hiding (read)
+import Prelude hiding ( read )
 import GHC.Generics ( Generic )
-import Data.Aeson ( FromJSON, ToJSON )
-import Data.Map (Map, toList)
-import Data.Semigroup (stimes)
-import Control.Monad.Except ( ExceptT )
-import Control.Monad.State ( StateT )
-import Control.Monad.Reader ( ReaderT )
+import Data.Aeson
+import Data.Map ( Map, toList )
+import Data.Semigroup ( stimes )
+import qualified Data.Map as M
+import Data.Text ( unpack )
+import Data.Aeson.Types (Parser)
+import Data.Functor ( (<&>) )
+import Data.Aeson.Key ( fromString )
 import Prettyprinter
 
-import Tape
-
 type StateName = String
-type Symbol = String
+
+newtype Symbol = Symbol Char
+    deriving newtype (Eq, Ord, Show, Pretty)
 
 data Action = LEFT | RIGHT
-    deriving (Eq, Show, Generic, ToJSON, FromJSON)
+    deriving (Eq, Show, Generic, FromJSON)
 
-data Transition = Transition {
-    read        :: Symbol,
-    write       :: Symbol,
-    to_state    :: StateName,
-    action      :: Action
-}  deriving (Eq, Show, Generic, ToJSON, FromJSON)
+data Transition = (StateName, Symbol) :-> (StateName, Symbol, Action)
+    deriving (Eq)
 
 data Specification = Specification {
     name        :: String,
@@ -38,40 +36,38 @@ data Specification = Specification {
     states      :: [StateName],
     initial     :: StateName,
     finals      :: [StateName],
-    transitions :: Map StateName [Transition]
-}  deriving (Eq, Show, Generic, ToJSON, FromJSON)
+    transitions :: Map (StateName, Symbol) Transition
+}  deriving (Eq, Generic)
 
 instance Pretty Action where
     pretty = pretty . show
 
+instance Pretty Transition where
+    pretty (from :-> to) = pretty from
+                       <+> pretty ("->" :: String)
+                       <+> pretty to
+
 instance Pretty Specification where
-    pretty specif = vsep
+    pretty specif =  vsep
         [ stimes w ast
         , ast <> stimes (w - 2) space <> ast
         , printName
         , ast <> stimes (w - 2) space <> ast
         , stimes w ast
-        , pretty "Alphabet:" <+> prettyList' (alphabet specif)
-        , pretty "States:"   <+> prettyList' (states specif)
-        , pretty "Initial:"  <+> pretty (initial specif)
-        , pretty "Finals:"   <+> prettyList' (finals specif)
-        , pretty "Transitions:"
-        , indent 2 . vsep . map printTransitions . toList $ transitions specif
-        , stimes w ast ]
-        
+        , pretty "Alphabet:"    <+> prettyList' (alphabet specif)
+        , pretty "States:"      <+> prettyList' (states specif)
+        , pretty "Initial:"     <+> pretty (initial specif)
+        , pretty "Finals:"      <+> prettyList' (finals specif)
+        , pretty "Transitions:" <+> prettyList (M.elems $ transitions specif)
+        , stimes w ast
+        ]
         where
+            w = 80
             ast = pretty '*'
-            w = 80 :: Int
+            prettyList' :: Pretty a => [a] -> Doc ann
             prettyList' = align
                         . encloseSep (pretty "[ ") (pretty " ]") (pretty ", ")
                         . map pretty
-            printTransition from_state
-                (Transition {read, write, to_state, action}) =
-                    pretty (from_state, read)
-                <+> pretty "->"
-                <+> pretty (to_state, write, action)
-            printTransitions (stateName, transitions) =
-                vsep $ map (printTransition stateName) transitions
             printName =
                 let nameWidth = length (name specif)
                     pad = (w - nameWidth) `div` 2
@@ -79,22 +75,34 @@ instance Pretty Specification where
                 <> fill (w - 2) (stimes pad space <> pretty (name specif))
                 <> ast
 
-data MachineState = MachineState {
-    tape      :: Tape Symbol,
-    stateName :: StateName,
-    stats     :: Stats
-}
+data JSONTransition = JSONTransition {
+    read        :: Symbol,
+    write       :: Symbol,
+    to_state    :: StateName,
+    action      :: Action
+}  deriving (Eq, Show, Generic, FromJSON)
 
-data Stats = Stats {
-    nSteps    :: Integer,
-    minIndex  :: Integer,
-    maxIndex  :: Integer
-}  deriving (Eq, Show)
+instance FromJSON Symbol where
+    parseJSON (String s) = case unpack s of
+        [c] -> pure $ Symbol c
+        _   -> fail "Each symbol must be a single character"
 
-type Engine a = ReaderT Specification (StateT MachineState (ExceptT String IO)) a
+    parseJSON _ = fail "Each symbol must be a single character"
 
-
-        
-
-       
-
+instance FromJSON Specification where
+    parseJSON = withObject "Specification" $ \v -> do
+        trs' <- v .: fromString "transitions"
+                                    :: Parser (Map StateName [JSONTransition])
+        let trs = M.fromList $ concat $ toList trs'
+               <&> \(state0, ts) -> ts
+               <&> \(JSONTransition c0 c1 state1 act) ->
+                    ( (state0, c0)
+                    , (state0, c0) :-> (state1, c1, act)
+                    )
+        Specification <$> v .: fromString "name"
+                      <*> v .: fromString "alphabet"
+                      <*> v .: fromString "blank"
+                      <*> v .: fromString "states"
+                      <*> v .: fromString "initial"
+                      <*> v .: fromString "finals"
+                      <*> return trs

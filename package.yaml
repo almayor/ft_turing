@@ -26,6 +26,7 @@ dependencies:
 - containers
 - bytestring
 - prettyprinter
+- text
 
 ghc-options:
 - -Wall

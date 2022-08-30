@@ -40,17 +40,17 @@ validate program specif@(Specification{name, alphabet, blank, states,
     when (null transitions) $ Left "There must be at least one transition"
     when (null alphabet) $ Left "There must be at least one symbol in the alphabet"
     when (null states) $ Left "There must be at least one state"
-    when (null blank) $ Left "There must be a blank symbol in the alphabet"
 
     unless (initial `elem` states) $ Left "Initial state must be a state"
     unless (all (`elem` states) finals) $ Left "Each final state must be a state"
     unless (blank `elem` alphabet) $ Left "Blank symbol must be in the alphabet"
-    unless (all (`elem` states) $ M.keys transitions) $ Left "Each transition must be from a state"
 
-    let check (Transition {to_state}) = to_state `elem` states in
-        unless (all (all check) $ M.elems transitions) $ Left "Each transition must be to a state"
-    let check (Transition {read, write}) = read `elem` alphabet && write `elem` alphabet in
-        unless (all (all check) $ M.elems transitions) $ Left "Transition symbols must be in the alphabet"
+    let check ((state0, _) :-> _) = state0 `elem` states in
+        unless (all check $ M.elems transitions) $ Left "Each transition must be from a state"
+    let check (_ :-> (state1, _, _)) = state1 `elem` states in
+        unless (all check $ M.elems transitions) $ Left "Each transition must be to a state"
+    let check ((_, c0) :-> (_, c1, _)) = c0 `elem` alphabet && c1 `elem` alphabet in
+        unless (all check $ M.elems transitions) $ Left "Transition symbols must be in the alphabet"
 
     unless (all (`elem` alphabet) program) $ Left "Invalid program"
     return specif
@@ -65,7 +65,7 @@ main = run `catchError` handler
         when (length args /= 2 || helpRequested) printUsage
 
         description <- B.readFile $ head args
-        let program = map (:[]) (args !! 1) :: [Symbol]
+        let program = map Symbol $ args !! 1
         let specification = eitherDecode description >>= validate program
         case specification of 
             Left msg     -> hPutStrLn stderr msg >> exitFailure

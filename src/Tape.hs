@@ -55,7 +55,7 @@ instance Eq a => Eq (TapeSlice a) where
         && take' (idx1 - lo1) ls1 == take' (idx2 - lo2) ls2
         && take' (hi1 - idx1) rs1 == take' (hi2 - idx2) rs2
 
-instance (Pretty a, Monoid a) => Pretty (TapeSlice a) where
+instance (Pretty a) => Pretty (TapeSlice a) where
     pretty (TapeSlice tape lo hi) =
         let (Tape fcs idx ls rs) = tape
             take' = take . fromIntegral
@@ -63,8 +63,8 @@ instance (Pretty a, Monoid a) => Pretty (TapeSlice a) where
             colorBrightWhite = pretty "\x1b[1;32m" 
             colorReset = pretty "\x1b[0m"
         in brackets $
-           pretty (mconcat . reverse $ take' (idx - lo) ls)
+           (mconcat . map pretty . reverse $ take' (idx - lo) ls)
         <> colorBrightWhite <> colorBackRed
         <> (if idx > hi || idx < lo then mempty else pretty fcs)
         <> colorReset
-        <> pretty (mconcat $ take' (hi - idx) rs)
+        <> (mconcat . map pretty $ take' (hi - idx) rs)

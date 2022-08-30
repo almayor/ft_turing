@@ -40,6 +40,7 @@ library
     , containers
     , mtl
     , prettyprinter
+    , text
   default-language: Haskell2010
 
 executable ft-turing-exe
@@ -57,6 +58,7 @@ executable ft-turing-exe
     , ft-turing
     , mtl
     , prettyprinter
+    , text
   default-language: Haskell2010
 
 test-suite ft-turing-test
@@ -75,4 +77,5 @@ test-suite ft-turing-test
     , ft-turing
     , mtl
     , prettyprinter
+    , text
   default-language: Haskell2010
