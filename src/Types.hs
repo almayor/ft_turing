@@ -62,7 +62,8 @@ instance Pretty Specification where
         where
             ast = pretty '*'
             w = 80 :: Int
-            prettyList' = encloseSep (pretty "[ ") (pretty " ]") (pretty ", ")
+            prettyList' = align
+                        . encloseSep (pretty "[ ") (pretty " ]") (pretty ", ")
                         . map pretty
             printTransition from_state
                 (Transition {read, write, to_state, action}) =

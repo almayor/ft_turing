@@ -29,7 +29,7 @@ logTransition :: StateName -> Transition -> Engine ()
 logTransition stateName0 (Transition c0 c1 stateName1 action) = do
     MachineState {tape, stats} <- get
     let Stats {nSteps, minIndex, maxIndex} = stats
-    liftIO . putDocW 100 $ fill 2 (pretty nSteps)
+    liftIO . putDocW 160 $ fill 2 (pretty nSteps)
                  <+> pretty (sliceTape minIndex maxIndex tape)
                  <+> pretty (stateName0, c0)
                  <+> pretty "->"
