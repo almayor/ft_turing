@@ -62,7 +62,7 @@ engine = do
     when stuck $ throwError "Machine has stuck"
     halted <- hasHalted
     if halted then return () else next >> engine
-
+    
     where
         hasHalted :: Engine Bool
         hasHalted = do
@@ -80,7 +80,7 @@ engine = do
 
 runEngine :: Specification -> [Symbol] -> IO ()
 runEngine specif@(Specification {blank, initial}) program =
-        print (pretty specif)
+    print (pretty specif)
     >>  runExceptT (execStateT (runReaderT engine specif) initState)
     >>= either die' logFinalState
     where
