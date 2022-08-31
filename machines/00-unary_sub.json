@@ -13,7 +13,8 @@
     { "read" : "=", "to_state": "eraseone" , "write": ".", "action": "LEFT" }
     ],
     "eraseone": [
-    { "read" : "1", "to_state": "subone", "write": "=", "action": "LEFT"}
+    { "read" : "1", "to_state": "subone", "write": "=", "action": "LEFT"},
+    { "read" : "-", "to_state": "HALT" , "write": ".", "action": "LEFT"}
     ],
     "subone": [
     { "read" : "1", "to_state": "subone", "write": "1", "action": "LEFT"},
