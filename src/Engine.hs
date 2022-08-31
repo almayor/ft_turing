@@ -1,4 +1,5 @@
- {-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE LambdaCase #-}
 module Engine (runEngine) where
 
 import Prelude hiding (read)
@@ -6,6 +7,7 @@ import Control.Monad.Except
 import Control.Monad.State
 import Control.Monad.Reader
 import qualified Data.Map as M
+import System.Exit (exitFailure)
 import Prettyprinter
 import Prettyprinter.Util (putDocW)
 import System.IO (hPutStrLn, stderr)
@@ -34,7 +36,7 @@ next = do
     let c0 = focus tape0
     tr@(_ :-> (state1, c1, act)) <- case M.lookup (state0, c0) transitions of
         Just tr -> return tr
-        Nothing -> fail $ "No transition specified for (" ++ state0 ++ ", " ++ show [c0] ++ ")"
+        Nothing -> throwError $ "No transition specified for (" ++ state0 ++ ", " ++ show [c0] ++ ")"
     liftIO . putDocW 160 $ pretty tr <> line
 
     let tape' = writeTape c1 tape0
@@ -42,7 +44,7 @@ next = do
             LEFT  -> moveL tape'
             RIGHT -> moveR tape'
 
-    tape1 <- maybe (fail "Moved past leftmost position") return tapeM
+    tape1 <- maybe (throwError "Moved past leftmost position on tape") return tapeM
     Stats {nSteps, minIndex, maxIndex} <- gets stats
     put $ MachineState tape1 state1 $ Stats {
         nSteps   = nSteps + 1,
@@ -61,7 +63,7 @@ engine = do
     when stuck $ throwError "Machine has stuck"
     halted <- hasHalted
     if halted then return () else next >> engine
-
+    
     where
         hasHalted :: Engine Bool
         hasHalted = do
@@ -79,10 +81,9 @@ engine = do
 
 runEngine :: Specification -> [Symbol] -> IO ()
 runEngine specif@(Specification {blank, initial}) program =
-        print (pretty specif)
+    print (pretty specif)
     >>  runExceptT (execStateT (runReaderT engine specif) initState)
-    >>= either (hPutStrLn stderr) logFinalState
-
+    >>= either (\s -> hPutStrLn stderr s >> exitFailure) logFinalState
     where
         initState :: MachineState
         initState =
