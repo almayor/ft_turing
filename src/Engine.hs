@@ -72,7 +72,7 @@ engine = do
         hasStuck = do
             Stats {nSteps, minIndex, maxIndex} <- gets stats
             Specification {states, alphabet}   <- ask
-            let nStates = fromIntegral $ length states
+            let nStates  = fromIntegral $ length states
             let nSymbols = fromIntegral $ length alphabet
             return $ nSteps >= nStates * nSymbols * (maxIndex - minIndex)
 
