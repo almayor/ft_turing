@@ -95,5 +95,5 @@ runEngine specif@(Specification {blank, initial}) program =
         logFinalState :: MachineState -> IO ()
         logFinalState finalState =
             let Stats {nSteps, minIndex, maxIndex} = stats finalState
-             in print . pretty $ "\n\nUsed: " ++ show nSteps ++ " steps, "
+            in  print . pretty $ "\n\nUsed: " ++ show nSteps ++ " steps, "
                                ++ show (maxIndex - minIndex) ++ " tape cells"
