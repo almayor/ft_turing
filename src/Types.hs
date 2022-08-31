@@ -9,11 +9,10 @@ module Types where
 import Prelude hiding ( read )
 import GHC.Generics ( Generic )
 import Data.Aeson
-import Data.Map ( Map, toList )
-import Data.Semigroup ( stimes )
 import qualified Data.Map as M
+import Data.Semigroup ( stimes )
 import Data.Text ( unpack )
-import Data.Aeson.Types (Parser)
+import Data.Aeson.Types ( Parser )
 import Data.Functor ( (<&>) )
 import Data.Aeson.Key ( fromString )
 import Prettyprinter
@@ -36,7 +35,7 @@ data Specification = Specification {
     states      :: [StateName],
     initial     :: StateName,
     finals      :: [StateName],
-    transitions :: Map (StateName, Symbol) Transition
+    transitions :: M.Map (StateName, Symbol) Transition
 }  deriving (Eq, Generic)
 
 instance Pretty Action where
@@ -85,13 +84,13 @@ data JSONTransition = JSONTransition {
     write       :: Symbol,
     to_state    :: StateName,
     action      :: Action
-}  deriving (Eq, Show, Generic, FromJSON)
+}  deriving (Eq, Generic, FromJSON)
 
 instance FromJSON Specification where
     parseJSON = withObject "Specification" $ \v -> do
         trs' <- v .: fromString "transitions"
-                                    :: Parser (Map StateName [JSONTransition])
-        let trs = M.fromList $ concat $ toList trs'
+                                    :: Parser (M.Map StateName [JSONTransition])
+        let trs = M.fromList $ concat $ M.toList trs'
                <&> \(state0, ts) -> ts
                <&> \(JSONTransition c0 c1 state1 act) ->
                     ( (state0, c0)
