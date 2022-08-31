@@ -26,12 +26,12 @@ makeTape blank [] = Tape {
 writeTape :: a -> Tape a -> Tape a
 writeTape x tape = tape {focus = x}
 
-moveL :: Tape a -> Tape a
-moveL (Tape fcs idx (l:ls) rs) = Tape l (idx - 1) ls (fcs:rs)
-moveL _ = error "Impossible! Reached end of infinite tape!"
+moveL :: Tape a -> Maybe (Tape a)
+moveL (Tape fcs idx (l:ls) rs) = Just $ Tape l (idx - 1) ls (fcs:rs)
+moveL _ = Nothing -- can't move left from the leftmost position
 
-moveR :: Tape a -> Tape a
-moveR (Tape fcs idx ls (r:rs)) = Tape r (idx + 1) (fcs:ls) rs
+moveR :: Tape a -> Maybe (Tape a)
+moveR (Tape fcs idx ls (r:rs)) = Just $ Tape r (idx + 1) (fcs:ls) rs
 moveR _ = error "Impossible! Reached end of infinite tape!"
 
 instance Functor Tape where

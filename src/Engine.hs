@@ -38,10 +38,11 @@ next = do
     liftIO . putDocW 160 $ pretty tr <> line
 
     let tape' = writeTape c1 tape0
-    let tape1 = case act of
+    let tapeM = case act of
             LEFT  -> moveL tape'
             RIGHT -> moveR tape'
-    
+
+    tape1 <- maybe (fail "Moved past leftmost position") return tapeM
     Stats {nSteps, minIndex, maxIndex} <- gets stats
     put $ MachineState tape1 state1 $ Stats {
         nSteps   = nSteps + 1,
