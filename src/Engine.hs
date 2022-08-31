@@ -78,9 +78,9 @@ engine = do
 
 runEngine :: Specification -> [Symbol] -> IO ()
 runEngine specif@(Specification {blank, initial}) program =
-    print (pretty specif) >>
-    runExceptT (execStateT (runReaderT engine specif) initState) >>=
-    either (hPutStrLn stderr) logFinalState
+        print (pretty specif)
+    >>  runExceptT (execStateT (runReaderT engine specif) initState)
+    >>= either (hPutStrLn stderr) logFinalState
 
     where
         initState :: MachineState
