@@ -1,0 +1,13 @@
+{
+"name" : "unary_sub",
+"alphabet": [ "." ],
+"blank" : ".",
+"states" : [ "scanleft", "HALT" ],
+"initial" : "scanleft",
+"finals" : [ "HALT" ],
+"transitions" : {
+    "scanleft": [
+    { "read" : ".", "to_state": "scanleft", "write": ".", "action": "LEFT"}
+    ]
+    }
+}
