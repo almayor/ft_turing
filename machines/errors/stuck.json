@@ -1,5 +1,5 @@
 {
-"name" : "unary_sub",
+"name" : "stuck",
 "alphabet": [ "." ],
 "blank" : ".",
 "states" : [ "scanright", "scanleft", "HALT" ],

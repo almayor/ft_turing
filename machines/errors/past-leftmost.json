@@ -1,5 +1,5 @@
 {
-"name" : "unary_sub",
+"name" : "past-leftmost",
 "alphabet": [ "." ],
 "blank" : ".",
 "states" : [ "scanleft", "HALT" ],
