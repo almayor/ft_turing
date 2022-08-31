@@ -41,8 +41,8 @@ next = do
     let tapeM = case act of
             LEFT  -> moveL tape'
             RIGHT -> moveR tape'
-
     tape1 <- maybe (throwError "Moved past leftmost position on tape") return tapeM
+
     Stats {nSteps, minIndex, maxIndex} <- gets stats
     put $ MachineState tape1 state1 $ Stats {
         nSteps   = nSteps + 1,
@@ -68,7 +68,7 @@ engine = do
             MachineState {stateName} <- get
             Specification {finals}   <- ask
             return $ stateName `elem` finals
-        
+
         hasStuck :: Engine Bool
         hasStuck = do
             Stats {nSteps, minIndex, maxIndex} <- gets stats
@@ -86,7 +86,7 @@ runEngine specif@(Specification {blank, initial}) program =
         initState :: MachineState
         initState =
             let tape0  = makeTape blank program
-                stats0 = Stats 
+                stats0 = Stats
                     { nSteps = 0
                     , minIndex = 0
                     , maxIndex = fromIntegral $ length program + 5 }
