@@ -60,7 +60,7 @@ instance (Pretty a) => Pretty (TapeSlice a) where
         let (Tape fcs idx ls rs) = tape
             take' = take . fromIntegral
             colorBackRed = pretty "\x1b[41m"
-            colorBrightWhite = pretty "\x1b[1;32m" 
+            colorBrightWhite = pretty "\x1b[1;37m" 
             colorReset = pretty "\x1b[0m"
         in brackets $
            (mconcat . map pretty . reverse $ take' (idx - lo) ls)
