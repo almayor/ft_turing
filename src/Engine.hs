@@ -75,7 +75,7 @@ engine = do
             Specification {states, alphabet}   <- ask
             let nStates  = fromIntegral $ length states
             let nSymbols = fromIntegral $ length alphabet
-            return $ nSteps >= nStates * nSymbols * (maxIndex - minIndex)
+            return $ nSteps > nSymbols ^ (maxIndex - minIndex + 1) * nStates
 
 runEngine :: Specification -> [Symbol] -> IO ()
 runEngine specif@(Specification {blank, initial}) program =
