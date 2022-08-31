@@ -54,7 +54,7 @@ engine = do
     Stats {nSteps, minIndex, maxIndex} <- gets stats
     tape <- gets tape
     let tapeSlice = sliceTape minIndex maxIndex tape
-    liftIO . print $ fill 2 (pretty nSteps) <+> pretty tapeSlice
+    liftIO . putDocW 160 $ fill 2 (pretty nSteps) <+> pretty tapeSlice <+> space
 
     stuck  <- hasStuck
     when stuck $ throwError "Machine has stuck"
@@ -80,7 +80,7 @@ runEngine :: Specification -> [Symbol] -> IO ()
 runEngine specif@(Specification {blank, initial}) program =
     print (pretty specif) >>
     runExceptT (execStateT (runReaderT engine specif) initState) >>=
-        either (hPutStrLn stderr) printStats
+        either (hPutStrLn stderr) logFinalState
 
     where
         initState :: MachineState
@@ -92,8 +92,8 @@ runEngine specif@(Specification {blank, initial}) program =
                     , maxIndex = fromIntegral $ length program + 5 }
             in MachineState initTape initial initStats
 
-        printStats :: MachineState -> IO ()
-        printStats finalState =
+        logFinalState :: MachineState -> IO ()
+        logFinalState finalState =
             let Stats {nSteps, minIndex, maxIndex} = stats finalState
              in print . pretty $ "\n\nUsed: " ++ show nSteps ++ " steps, "
                                ++ show (maxIndex - minIndex) ++ " tape cells"

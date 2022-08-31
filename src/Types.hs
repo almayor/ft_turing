@@ -75,19 +75,19 @@ instance Pretty Specification where
                 <> fill (w - 2) (stimes pad space <> pretty (name specif))
                 <> ast
 
-data JSONTransition = JSONTransition {
-    read        :: Symbol,
-    write       :: Symbol,
-    to_state    :: StateName,
-    action      :: Action
-}  deriving (Eq, Show, Generic, FromJSON)
-
 instance FromJSON Symbol where
     parseJSON (String s) = case unpack s of
         [c] -> pure $ Symbol c
         _   -> fail "Each symbol must be a single character"
 
     parseJSON _ = fail "Each symbol must be a single character"
+
+data JSONTransition = JSONTransition {
+    read        :: Symbol,
+    write       :: Symbol,
+    to_state    :: StateName,
+    action      :: Action
+}  deriving (Eq, Show, Generic, FromJSON)
 
 instance FromJSON Specification where
     parseJSON = withObject "Specification" $ \v -> do
