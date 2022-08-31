@@ -56,7 +56,7 @@ instance Pretty Specification where
         , pretty "States:"      <+> prettyList' (states specif)
         , pretty "Initial:"     <+> pretty (initial specif)
         , pretty "Finals:"      <+> prettyList' (finals specif)
-        , pretty "Transitions:" <+> prettyList (M.elems $ transitions specif)
+        , pretty "Transitions:" <+> prettyList' (M.elems $ transitions specif)
         , stimes w ast
         ]
         where

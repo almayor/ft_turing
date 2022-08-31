@@ -34,7 +34,7 @@ next = do
     let c0 = focus tape0
     tr@(_ :-> (state1, c1, act)) <- case M.lookup (state0, c0) transitions of
         Just tr -> return tr
-        Nothing -> throwError $ "No transition specified for (" ++ state0 ++ ", " ++ show [c0] ++ ")"
+        Nothing -> fail $ "No transition specified for (" ++ state0 ++ ", " ++ show [c0] ++ ")"
     liftIO . putDocW 160 $ pretty tr <> line
 
     let tape' = writeTape c1 tape0
@@ -80,17 +80,17 @@ runEngine :: Specification -> [Symbol] -> IO ()
 runEngine specif@(Specification {blank, initial}) program =
     print (pretty specif) >>
     runExceptT (execStateT (runReaderT engine specif) initState) >>=
-        either (hPutStrLn stderr) logFinalState
+    either (hPutStrLn stderr) logFinalState
 
     where
         initState :: MachineState
         initState =
-            let initTape  = makeTape blank program
-                initStats = Stats 
+            let tape0  = makeTape blank program
+                stats0 = Stats 
                     { nSteps = 0
                     , minIndex = -3
                     , maxIndex = fromIntegral $ length program + 5 }
-            in MachineState initTape initial initStats
+            in  MachineState tape0 initial stats0
 
         logFinalState :: MachineState -> IO ()
         logFinalState finalState =
