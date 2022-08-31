@@ -43,9 +43,7 @@ instance Pretty Action where
     pretty = pretty . show
 
 instance Pretty Transition where
-    pretty (from :-> to) = pretty from
-                       <+> pretty ("->" :: String)
-                       <+> pretty to
+    pretty (from :-> to) = pretty from <+> pretty "->" <+> pretty to
 
 instance Pretty Specification where
     pretty specif =  vsep
