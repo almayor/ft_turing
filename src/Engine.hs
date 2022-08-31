@@ -1,5 +1,4 @@
 {-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE LambdaCase #-}
 module Engine (runEngine) where
 
 import Prelude hiding (read)
@@ -10,7 +9,6 @@ import qualified Data.Map as M
 import System.Exit (die)
 import Prettyprinter
 import Prettyprinter.Util (putDocW)
-import System.IO (hPutStrLn, stderr)
 
 import Types
 import Tape
