@@ -55,7 +55,7 @@ engine = do
     Stats {nSteps, minIndex, maxIndex} <- gets stats
     tape <- gets tape
     let tapeSlice = sliceTape minIndex maxIndex tape
-    liftIO . putDocW 160 $ fill 2 (pretty nSteps) <+> pretty tapeSlice <+> space
+    liftIO . putDocW 160 $ fill 3 (pretty nSteps) <+> pretty tapeSlice <+> space
 
     stuck  <- hasStuck
     when stuck $ throwError "Machine has stuck"
