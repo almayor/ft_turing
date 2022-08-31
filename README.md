@@ -1,6 +1,6 @@
 # ft_turing – a Turing Machine simulator written in Haskell
 
-* A student project implementing a single-headed, singly-infinite-tape Turing machine in Haskell
+* A student project implementing a single-headed, doubly-infinite-tape Turing machine in Haskell
 * The goal is to
     * parse a machine description ([example](machines/00-unary_sub.json))
     * validate it
