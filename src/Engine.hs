@@ -7,7 +7,7 @@ import Control.Monad.Except
 import Control.Monad.State
 import Control.Monad.Reader
 import qualified Data.Map as M
-import System.Exit (exitFailure)
+import System.Exit (die)
 import Prettyprinter
 import Prettyprinter.Util (putDocW)
 import System.IO (hPutStrLn, stderr)
@@ -63,7 +63,7 @@ engine = do
     when stuck $ throwError "Machine has stuck"
     halted <- hasHalted
     if halted then return () else next >> engine
-    
+
     where
         hasHalted :: Engine Bool
         hasHalted = do
@@ -83,7 +83,7 @@ runEngine :: Specification -> [Symbol] -> IO ()
 runEngine specif@(Specification {blank, initial}) program =
     print (pretty specif)
     >>  runExceptT (execStateT (runReaderT engine specif) initState)
-    >>= either (\s -> hPutStrLn stderr s >> exitFailure) logFinalState
+    >>= either die logFinalState
     where
         initState :: MachineState
         initState =
