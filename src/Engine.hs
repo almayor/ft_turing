@@ -88,7 +88,7 @@ runEngine specif@(Specification {blank, initial}) program =
             let tape0  = makeTape blank program
                 stats0 = Stats 
                     { nSteps = 0
-                    , minIndex = -3
+                    , minIndex = 0
                     , maxIndex = fromIntegral $ length program + 5 }
             in  MachineState tape0 initial stats0
 

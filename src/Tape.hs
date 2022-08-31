@@ -28,11 +28,11 @@ writeTape x tape = tape {focus = x}
 
 moveL :: Tape a -> Tape a
 moveL (Tape fcs idx (l:ls) rs) = Tape l (idx - 1) ls (fcs:rs)
-moveL _ = error "Impossible! Infinite tape is empty!"
+moveL _ = error "Impossible! Reached end of infinite tape!"
 
 moveR :: Tape a -> Tape a
 moveR (Tape fcs idx ls (r:rs)) = Tape r (idx + 1) (fcs:ls) rs
-moveR _ = error "Impossible! Infinite tape is empty!"
+moveR _ = error "Impossible! Reached end of infinite tape!"
 
 instance Functor Tape where
     fmap f tape = tape {
