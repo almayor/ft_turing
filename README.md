@@ -7,7 +7,7 @@
     * run the machine and log all transitions
 * For complete instructions please refer to [docs](https://github.com/fpetras/42-subjects/blob/master/ft_turing.en.pdf)
 
-### Usage
+## Usage
 
 To use the machine you need to have installed [Stack](https://docs.haskellstack.org/en/stable/install_and_upgrade/). You can then run
 
@@ -23,7 +23,7 @@ For example,
 $ stack run machines/00-unary_sub.json "111-11="
 ```
 
-### Provided machines
+## Provided machines
 
 A few machines capable of executing simple programs can be found in `machines/`:
 * `00-unary_sub` -- unary subtraction
