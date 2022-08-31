@@ -6,6 +6,7 @@ import Control.Monad.Except
 import Control.Monad.State
 import Control.Monad.Reader
 import qualified Data.Map as M
+import System.IO (hFlush, stdout)
 import System.Exit (die)
 import Prettyprinter
 import Prettyprinter.Util (putDocW)
@@ -78,10 +79,10 @@ engine = do
             return $ nSteps > nSymbols ^ (maxIndex - minIndex + 1) * nStates
 
 runEngine :: Specification -> [Symbol] -> IO ()
-runEngine specif@(Specification {blank, initial}) program =
-    print (pretty specif)
+runEngine specif@(Specification {blank, initial}) program = do
+        print (pretty specif)
     >>  runExceptT (execStateT (runReaderT engine specif) initState)
-    >>= either die logFinalState
+    >>= either die' logFinalState
     where
         initState :: MachineState
         initState =
@@ -97,3 +98,5 @@ runEngine specif@(Specification {blank, initial}) program =
             let Stats {nSteps, minIndex, maxIndex} = stats finalState
             in  print . pretty $ "\n\nUsed: " ++ show nSteps ++ " steps, "
                                ++ show (maxIndex - minIndex) ++ " tape cells"
+        
+        die' s = hFlush stdout >> die s
