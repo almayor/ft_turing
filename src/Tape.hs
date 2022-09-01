@@ -67,4 +67,4 @@ instance (Pretty a) => Pretty (TapeSlice a) where
         <> colorBrightWhite <> colorBackRed
         <> (if idx > hi || idx < lo then mempty else pretty fcs)
         <> colorReset
-        <> (mconcat . map pretty $ take' (hi - idx) rs)
+        <> (mconcat . map pretty $ take' (hi - idx + 5) rs)

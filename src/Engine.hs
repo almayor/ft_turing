@@ -90,7 +90,7 @@ runEngine specif@(Specification {blank, initial}) program =
                 stats0 = Stats
                     { nSteps = 0
                     , minIndex = 0
-                    , maxIndex = fromIntegral $ length program + 5 }
+                    , maxIndex = fromIntegral $ length program }
             in  MachineState tape0 initial stats0
 
         logFinalState :: MachineState -> IO ()
