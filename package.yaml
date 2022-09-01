@@ -27,7 +27,6 @@ dependencies:
 - bytestring
 - prettyprinter
 - text
-- optparse-applicative
 
 ghc-options:
 - -Wall

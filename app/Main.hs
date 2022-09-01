@@ -5,24 +5,29 @@ import Prelude hiding (read)
 import Data.Aeson
 import qualified Data.ByteString.Lazy as B
 import qualified Data.Map as M
-import System.Exit (die)
+import System.Exit (exitFailure)
+import System.IO (hPutStrLn, stderr)
+import System.Environment (getArgs, getProgName)
 import Control.Monad.Except
-import Options.Applicative
 
 import Types
 import Engine
 
-argparse :: IO (String, String)
-argparse = customExecParser (prefs showHelpOnEmpty) opts
-    where
-        opts = info (args <**> helper) briefDesc
-        args = (,)
-            <$> argument str
-                ( metavar "json"
-               <> help "json description of the machine" )
-            <*> argument str
-                ( metavar "input"
-               <> help "input of the machine" )
+
+printUsage :: IO a
+printUsage = do
+    progName <- getProgName
+    hPutStrLn stderr $ 
+        "Usage: " ++ progName ++ " [-h] jsonfile input\n\
+        \\n\
+        \positional arguments:\n\
+        \jsonfile              json description of the machine\n\
+        \\n\
+        \input                 input of the machine\n\
+        \\n\
+        \optional arguments:\n\
+        \-h, --help            show this help message and exit"
+    exitFailure
 
 validate :: [Symbol] -> Specification -> Either String Specification
 validate program specif@(Specification{name, alphabet, blank, states,
@@ -50,10 +55,13 @@ validate program specif@(Specification{name, alphabet, blank, states,
 
 main :: IO ()
 main = do
-    (configFile, input) <- argparse
-    description <- B.readFile configFile
-    let program = map Symbol input
+    args <- getArgs
+    let helpRequested = "--help" `elem` args || "-h" `elem` args
+    when (length args /= 2 || helpRequested) printUsage
+
+    description <- B.readFile $ head args
+    let program = map Symbol $ args !! 1
     let specification = eitherDecode description >>= validate program
     case specification of 
-        Left msg     -> die msg
+        Left msg     -> hPutStrLn stderr msg >> exitFailure
         Right specif -> runEngine specif program
