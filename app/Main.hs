@@ -5,8 +5,7 @@ import Prelude hiding (read)
 import Data.Aeson
 import qualified Data.ByteString.Lazy as B
 import qualified Data.Map as M
-import System.Exit (exitFailure)
-import System.IO (hPutStrLn, stderr)
+import System.Exit (die)
 import System.Environment (getArgs, getProgName)
 import Control.Monad.Except
 
@@ -63,5 +62,5 @@ main = do
     let program = map Symbol $ args !! 1
     let specification = eitherDecode description >>= validate program
     case specification of 
-        Left msg     -> hPutStrLn stderr msg >> exitFailure
+        Left msg     -> die msg
         Right specif -> runEngine specif program
