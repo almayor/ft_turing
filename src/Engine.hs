@@ -79,7 +79,7 @@ engine = do
             return $ nSteps > nSymbols ^ (maxIndex - minIndex + 1) * nStates
 
 runEngine :: Specification -> [Symbol] -> IO ()
-runEngine specif@(Specification {blank, initial}) program = do
+runEngine specif@(Specification {blank, initial}) program =
         print (pretty specif)
     >>  runExceptT (execStateT (runReaderT engine specif) initState)
     >>= either die' logFinalState
