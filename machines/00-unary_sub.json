@@ -8,9 +8,9 @@
 "transitions" : {
     "scanright": [
     { "read" : ".", "to_state": "scanright", "write": ".", "action": "LEFT"},
-    { "read" : "1", "to_state": "scanright", "write": "1", "action": "LEFT"},
-    { "read" : "-", "to_state": "scanright", "write": "-", "action": "LEFT"},
-    { "read" : "=", "to_state": "eraseone" , "write": ".", "action": "LEFT" }
+    { "read" : "1", "to_state": "scanright", "write": "1", "action": "RIGHT"},
+    { "read" : "-", "to_state": "scanright", "write": "-", "action": "RIGHT"},
+    { "read" : "=", "to_state": "eraseone" , "write": ".", "action": "RIGHT" }
     ],
     "eraseone": [
     { "read" : "1", "to_state": "subone", "write": "=", "action": "LEFT"},
