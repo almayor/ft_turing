@@ -13,13 +13,13 @@ makeTape :: a -> [a] -> Tape a
 makeTape blank (fcs:rs) = Tape {
     focus = fcs,
     index = 0,
-    lSide = [],
+    lSide = repeat blank,
     rSide = rs ++ repeat blank
 }
 makeTape blank [] = Tape {
     focus = blank,
     index = 0,
-    lSide = [],
+    lSide = repeat blank,
     rSide = repeat blank
 }
 
