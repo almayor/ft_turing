@@ -5,8 +5,7 @@ import Prelude hiding (read)
 import Data.Aeson
 import qualified Data.ByteString.Lazy as B
 import qualified Data.Map as M
-import System.Exit (exitFailure)
-import System.IO (hPutStrLn, stderr)
+import System.Exit (die)
 import System.Environment (getArgs, getProgName)
 import Control.Monad.Except
 
@@ -17,7 +16,7 @@ import Engine
 printUsage :: IO a
 printUsage = do
     progName <- getProgName
-    hPutStrLn stderr $ 
+    die $ 
         "Usage: " ++ progName ++ " [-h] jsonfile input\n\
         \\n\
         \positional arguments:\n\
@@ -27,7 +26,6 @@ printUsage = do
         \\n\
         \optional arguments:\n\
         \-h, --help            show this help message and exit"
-    exitFailure
 
 validate :: [Symbol] -> Specification -> Either String Specification
 validate program specif@(Specification{name, alphabet, blank, states,
@@ -63,5 +61,5 @@ main = do
     let program = map Symbol $ args !! 1
     let specification = eitherDecode description >>= validate program
     case specification of 
-        Left msg     -> hPutStrLn stderr msg >> exitFailure
+        Left msg     -> die msg
         Right specif -> runEngine specif program
