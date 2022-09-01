@@ -26,13 +26,13 @@ makeTape blank [] = Tape {
 writeTape :: a -> Tape a -> Tape a
 writeTape x tape = tape {focus = x}
 
-moveL :: Tape a -> Maybe (Tape a)
-moveL (Tape fcs idx (l:ls) rs) = Just $ Tape l (idx - 1) ls (fcs:rs)
-moveL _ = Nothing -- can't move left from the leftmost position
+moveL :: Tape a -> Tape a
+moveL (Tape fcs idx (l:ls) rs) = Tape l (idx - 1) ls (fcs:rs)
+moveL _ = error "Impossible! Infinite tape is empty!"
 
-moveR :: Tape a -> Maybe (Tape a)
-moveR (Tape fcs idx ls (r:rs)) = Just $ Tape r (idx + 1) (fcs:ls) rs
-moveR _ = error "Impossible! Reached end of infinite tape!"
+moveR :: Tape a -> Tape a
+moveR (Tape fcs idx ls (r:rs)) = Tape r (idx + 1) (fcs:ls) rs
+moveR _ = error "Impossible! Infinite tape is empty!"
 
 instance Functor Tape where
     fmap f tape = tape {
@@ -63,7 +63,7 @@ instance (Pretty a) => Pretty (TapeSlice a) where
             colorBrightWhite = pretty "\x1b[1;37m" 
             colorReset = pretty "\x1b[0m"
         in brackets $
-           (mconcat . map pretty . reverse $ take' (idx - lo) ls)
+           (mconcat . map pretty . reverse $ take' (idx - lo + 5) ls)
         <> colorBrightWhite <> colorBackRed
         <> (if idx > hi || idx < lo then mempty else pretty fcs)
         <> colorReset
