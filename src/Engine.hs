@@ -22,8 +22,7 @@ data MachineState = MachineState {
 
 data Stats = Stats {
     nSteps    :: Integer,
-    minIndex  :: Integer,
-    maxIndex  :: Integer
+    nCells   :: Integer
 }
 
 type Engine a = ReaderT Specification (StateT MachineState (ExceptT String IO)) a
@@ -44,19 +43,18 @@ next = do
             RIGHT -> moveR tape'
     tape1 <- maybe (throwError "Moved past leftmost position on tape") return tapeM
 
-    Stats {nSteps, minIndex, maxIndex} <- gets stats
+    Stats {nSteps, nCells} <- gets stats
     put $ MachineState tape1 state1 $ Stats {
-        nSteps   = nSteps + 1,
-        minIndex = min minIndex (index tape1),
-        maxIndex = max maxIndex (index tape1)
+        nSteps = nSteps + 1,
+        nCells = max nCells (index tape1 + 1)
     }
 
 engine :: Engine ()
 engine = do
-    Stats {nSteps, minIndex, maxIndex} <- gets stats
+    Stats {nSteps, nCells} <- gets stats
     tape <- gets tape
-    let tapeSlice = sliceTape minIndex maxIndex tape
-    liftIO . putDocW 160 $ fill 3 (pretty nSteps) <+> pretty tapeSlice <+> space
+    let slice = sliceTape tape nCells
+    liftIO . putDocW 160 $ fill 3 (pretty nSteps) <+> pretty slice <+> space
 
     stuck  <- hasStuck
     when stuck $ throwError "Machine has stuck"
@@ -72,11 +70,11 @@ engine = do
 
         hasStuck :: Engine Bool
         hasStuck = do
-            Stats {nSteps, minIndex, maxIndex} <- gets stats
+            Stats {nSteps, nCells} <- gets stats
             Specification {states, alphabet}   <- ask
             let nStates  = fromIntegral $ length states
             let nSymbols = fromIntegral $ length alphabet
-            return $ nSteps > nSymbols ^ (maxIndex - minIndex + 1) * nStates
+            return $ nSteps > nSymbols ^ nCells * nStates
 
 runEngine :: Specification -> [Symbol] -> IO ()
 runEngine specif@(Specification {blank, initial}) program =
@@ -89,14 +87,14 @@ runEngine specif@(Specification {blank, initial}) program =
             let tape0  = makeTape blank program
                 stats0 = Stats
                     { nSteps = 0
-                    , minIndex = 0
-                    , maxIndex = fromIntegral $ length program }
+                    , nCells = fromIntegral $ length program }
             in  MachineState tape0 initial stats0
 
         logFinalState :: MachineState -> IO ()
         logFinalState finalState =
-            let Stats {nSteps, minIndex, maxIndex} = stats finalState
-            in  print . pretty $ "\n\nUsed: " ++ show nSteps ++ " steps, "
-                               ++ show (maxIndex - minIndex) ++ " tape cells"
+            let Stats {nSteps, nCells} = stats finalState
+            in  print . pretty $ "\n\nUsed: "
+                               ++ show nSteps ++ " steps, "
+                               ++ show nCells ++ " tape cells"
         
         die' s = hFlush stdout >> die s

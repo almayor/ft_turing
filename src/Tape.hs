@@ -41,30 +41,31 @@ instance Functor Tape where
         rSide = f <$> rSide tape
     }
 
-data TapeSlice a = TapeSlice (Tape a) Integer Integer
+data TapeSlice a = TapeSlice (Tape a) Integer
 
-sliceTape :: Integer -> Integer -> Tape a -> TapeSlice a
-sliceTape lo hi tape = TapeSlice tape lo hi
-              
+sliceTape :: Tape a -> Integer -> TapeSlice a
+sliceTape = TapeSlice
+
 instance Eq a => Eq (TapeSlice a) where
-    TapeSlice t1 lo1 hi1 == TapeSlice t2 lo2 hi2 =
+    TapeSlice t1 nC1 == TapeSlice t2 nC2 =
         let (Tape fcs1 idx1 ls1 rs1) = t1
             (Tape fcs2 idx2 ls2 rs2) = t2
             take' = take . fromIntegral
-        in idx1 == idx2 && fcs1 == fcs2 && lo1 == lo2 && hi1 == hi2
-        && take' (idx1 - lo1) ls1 == take' (idx2 - lo2) ls2
-        && take' (hi1 - idx1) rs1 == take' (hi2 - idx2) rs2
+        in idx1 == idx2 && fcs1 == fcs2 && nC1 == nC1
+        && take' idx1 ls1 == take' idx2 ls2
+        && take' (nC1 - 1 - idx1) rs1 == take' (nC2 - 1 - idx2) rs2
 
 instance (Pretty a) => Pretty (TapeSlice a) where
-    pretty (TapeSlice tape lo hi) =
+    pretty (TapeSlice tape nC) =
         let (Tape fcs idx ls rs) = tape
             take' = take . fromIntegral
             colorBackRed = pretty "\x1b[41m"
             colorBrightWhite = pretty "\x1b[1;37m" 
             colorReset = pretty "\x1b[0m"
+            padR = if nC < 12 then 12 - (idx + 1) else nC - (idx + 1) + 4
         in brackets $
-           (mconcat . map pretty . reverse $ take' (idx - lo) ls)
+           (mconcat . map pretty . reverse $ take' idx ls)
         <> colorBrightWhite <> colorBackRed
-        <> (if idx > hi || idx < lo then mempty else pretty fcs)
+        <> (if idx > nC then mempty else pretty fcs)
         <> colorReset
-        <> (mconcat . map pretty $ take' (hi - idx + 5) rs)
+        <> (mconcat . map pretty $ take' padR rs)
