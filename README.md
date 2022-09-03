@@ -1,4 +1,4 @@
-# ft_turing – a Turing Machine simulator written in Haskell
+# `ft_turing` – a Turing Machine simulator written in Haskell
 
 * A student project implementing a single-headed, singly-infinite-tape Turing machine in Haskell
 * The goal is to
@@ -39,7 +39,7 @@ A few machines capable of executing simple programs can be found in `machines/`:
 
 <details>
 <summary><code>03-lang-0n1n</code> – checks if the input is a word in the language <img src="https://latex.codecogs.com/png.image?%5Cinline%20%5Cdpi%7B110%7D%5Cbg%7Bwhite%7D0%5E%7Bn%7D1%5En"/></summary>
-<img src="docs/examples/03-lang-0n1n-ex1.svg">
+</br><img src="docs/examples/03-lang-0n1n-ex1.svg">
 </details>
 
 <details>
@@ -51,5 +51,7 @@ A few machines capable of executing simple programs can be found in `machines/`:
 
 I'm grateful to the entire team behind [School 21](https://21-school.ru) for the opportunity to do these interesting projects. I also thank
 
-* 
+* [Denis Moskvin](https://www.hse.ru/en/org/persons/223602533) for a superb course on functional programming using Haskell
+* [Léonard Marques](https://github.com/keuhdall) for putting a [similar project](https://github.com/keuhdall/ft_turing) in the public domain; it helped me clarify some important points.
+* creators of [AnsiToImg](https://github.com/FHPythonUtils/AnsiToImg) – a tool for converting ANSI terminal output to pretty images
 
