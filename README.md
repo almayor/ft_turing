@@ -24,33 +24,28 @@ A few machines capable of executing simple programs can be found in `machines/`:
 
 <details>
 <summary><code>00-unary_sub</code> – performs unary subtraction.</summary>
-</br>Example:</br></br>
-<img src="docs/examples/00-unary_sub-ex1.svg">
-</br>
+</br><img src="docs/examples/00-unary_sub-ex1.svg">
 </details>
 
 <details>
 <summary><code>01-unary_add</code> – performs unary addition.</summary>
-</br>Example:</br></br>
-<img src="docs/examples/01-unary_add-ex1.svg">
+</br><img src="docs/examples/01-unary_add-ex1.svg">
 </details>
 
 <details>
 <summary><code>02-palindrome</code> – checks if the input is a palindrome.</summary>
-</br>Example:</br></br>
-<img src="docs/examples/02-palindrome-ex1.svg">
+</br><img src="docs/examples/02-palindrome-ex1.svg">
 </details>
 
 <details>
-<summary><code>03-0n1n</code> – checks if the input is a word in the language <img src="https://latex.codecogs.com/svg.image?%5Cinline%20%5C%200%5En1%5En"/></summary>
-<img src="docs/examples/03-0n1n-ex1.svg">
+<summary><code>03-lang-0n1n</code> – checks if the input is a word in the language <img src="https://latex.codecogs.com/png.image?%5Cinline%20%5Cdpi%7B110%7D%5Cbg%7Bwhite%7D0%5E%7Bn%7D1%5En"/></summary>
+<img src="docs/examples/03-lang-0n1n-ex1.svg">
 </details>
 
 <details>
-<summary><code>04-parity</code> – checks if the input is a word in the language <img style="padding-top:10cm;" src="https://latex.codecogs.com/svg.image?%5Cinline%20%5C%200%5E%7B2n%7D"/></summary>
-<img src="docs/examples/04-parity-ex1.svg">
+<summary><code>04-lang-02n</code> – checks if the input is a word in the language <img src="https://latex.codecogs.com/png.image?%5Cinline%20%5Cdpi%7B110%7D%5Cbg%7Bwhite%7D%5C%200%5E%7B2n%7D"/></summary>
+</br><img style="bottom-padding:10cm" src="docs/examples/04-lang-02n-ex1.svg"></br>
 </details>
-
 
 ## Acknowledgements
 
