@@ -1,5 +1,5 @@
 {
-"name" : "0n1n",
+"name" : "0^n 1^n",
 "alphabet": [ "0", "1", "y", "n", ".", "*" ],
 "blank" : ".",
 "states" : [ "start", "fail", "return", "HALT",
