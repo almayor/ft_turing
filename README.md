@@ -18,17 +18,44 @@ where
 - `machine` is a file describing the machine
 - `input` is a string of symbols, representing initial tape contents.
 
-## Provided machines
+## Example machines
 
 A few machines capable of executing simple programs can be found in `machines/`:
-* `00-unary_sub` – A machine able to compute an unary addition.
 
 <details>
-<summary>Example</summary>
-![](docs/examples/00-unary_sub-ex1.svg)
+<summary><code>00-unary_sub</code> – performs unary subtraction.</summary>
+Example:
+<img src="docs/examples/00-unary_sub-ex1.svg">
 </details>
+
+<details>
+<summary><code>01-unary_add</code> – performs unary addition.</summary>
+Example:
+<img src="docs/examples/01-unary_add-ex1.svg">
+</details>
+
+<details>
+<summary><code>02-palindrome</code> – checks if the input is a palindrome.</summary>
+Example:
+<img src="docs/examples/00-unary_sub-ex1.svg">
+</details>
+
+<details>
+<summary><code>03-0n1n</code> – checks if the input is a word in the language <img src="https://latex.codecogs.com/png.image?\dpi{110}0^n1^n"/></summary>
+Example:
+<img src="docs/examples/00-unary_sub-ex1.svg">
+</details>
+
+<details>
+<summary><code>04-parity</code> – checks if the input is a word in the language <img src="https://latex.codecogs.com/png.image?\dpi{110}0^{2n}"/></summary>
+Example:
+<img src="docs/examples/00-unary_sub-ex1.svg">
+</details>
+
 
 ## Acknowledgements
 
-I'm grateful to the entire team behind [School 21](https://21-school.ru) for the opportunity to do these interesting projects.
+I'm grateful to the entire team behind [School 21](https://21-school.ru) for the opportunity to do these interesting projects. I also thank
+
+* 
 
