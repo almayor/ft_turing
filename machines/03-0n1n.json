@@ -2,15 +2,15 @@
 "name" : "0n1n",
 "alphabet": [ "0", "1", "y", "n", ".", "*" ],
 "blank" : ".",
-"states" : [ "start", "fail", "fallback", "HALT",
+"states" : [ "start", "fail", "return", "HALT",
              "scan0", "scan1",
              "delete0", "delete1" ],
 "initial" : "start",
 "finals" : [ "HALT" ],
 "transitions" : {
     "fail": [
-    { "read": "0", "to_state": "fail", "write": "*", "action": "RIGHT" },
-    { "read": "1", "to_state": "fail", "write": "*", "action": "RIGHT" },
+    { "read": "0", "to_state": "fail", "write": "0", "action": "RIGHT" },
+    { "read": "1", "to_state": "fail", "write": "1", "action": "RIGHT" },
     { "read": "*", "to_state": "fail", "write": "*", "action": "RIGHT" },
     { "read": ".", "to_state": "HALT", "write": "n", "action": "RIGHT" }
     ],
@@ -22,14 +22,14 @@
     ],
     "scan1": [
     { "read": "1", "to_state": "scan1", "write": "1", "action": "RIGHT" },
-    { "read": ".", "to_state": "fallback", "write": ".", "action": "LEFT" },
-    { "read": "0", "to_state": "fail", "write": "*", "action": "RIGHT" },
+    { "read": ".", "to_state": "return", "write": ".", "action": "LEFT" },
+    { "read": "0", "to_state": "fail", "write": "0", "action": "RIGHT" },
     { "read": "*", "to_state": "fail", "write": "*", "action": "RIGHT" }
     ],
-    "fallback": [
-    { "read": "1", "to_state": "fallback", "write": "1", "action": "LEFT" },
-    { "read": "0", "to_state": "fallback", "write": "0", "action": "LEFT" },
-    { "read": "*", "to_state": "fallback", "write": "*", "action": "LEFT" },
+    "return": [
+    { "read": "1", "to_state": "return", "write": "1", "action": "LEFT" },
+    { "read": "0", "to_state": "return", "write": "0", "action": "LEFT" },
+    { "read": "*", "to_state": "return", "write": "*", "action": "LEFT" },
     { "read": ".", "to_state": "delete0", "write": ".", "action": "RIGHT" }
     ],
     "start": [
@@ -39,7 +39,7 @@
     "delete0": [
     { "read": "*", "to_state": "delete0", "write": "*", "action": "RIGHT" },
     { "read": "0", "to_state": "scan0", "write": "*", "action": "RIGHT" },
-    { "read": "1", "to_state": "fail", "write": "*", "action": "RIGHT" },
+    { "read": "1", "to_state": "fail", "write": "1", "action": "RIGHT" },
     { "read": ".", "to_state": "HALT", "write": "y", "action": "RIGHT" }
     ],
     "delete1": [
