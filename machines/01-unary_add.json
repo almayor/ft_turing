@@ -2,12 +2,13 @@
 "name" : "unary_add",
 "alphabet": [ "1", ".", "+", "=" ],
 "blank" : ".",
-"states" : [ "skip", "add_one", "HALT" ],
-"initial" : "skip",
+"states" : [ "scan", "add_one", "HALT" ],
+"initial" : "scan",
 "finals" : [ "HALT" ],
 "transitions" : {
-    "skip": [
-    { "read": "1", "to_state": "skip", "write": "1", "action": "RIGHT"},
+    "scan": [
+    { "read": "1", "to_state": "scan", "write": "1", "action": "RIGHT"},
+    { "read": ".", "to_state": "HALT", "write": ".", "action": "RIGHT"},
     { "read": "=", "to_state": "HALT", "write": ".", "action": "RIGHT"},
     { "read": "+", "to_state": "add_one", "write": ".", "action": "RIGHT"}
     ],
