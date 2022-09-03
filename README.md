@@ -24,8 +24,12 @@ A few machines capable of executing simple programs can be found in `machines/`:
 
 <details>
 <summary><code>00-unary_sub</code> – performs unary subtraction.</summary>
+</br>
 Example:
+</br>
+
 <img src="docs/examples/00-unary_sub-ex1.svg">
+</br>
 </details>
 
 <details>
