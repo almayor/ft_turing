@@ -1,0 +1,81 @@
+{
+"name" : "palindrome",
+"alphabet": [ "a", "b", "c", ".", "y", "n", "*" ],
+"blank" : ".",
+"states" : [ "start", "return", "fail", "succeed", "HALT",
+             "scan_a", "scan_b", "scan_c",
+             "assert_a", "assert_b", "assert_c" ],
+"initial" : "start",
+"finals" : [ "HALT" ],
+"transitions" : {
+    "start": [
+        { "read": "a", "to_state": "scan_a", "write": "*", "action": "RIGHT" },
+        { "read": "b", "to_state": "scan_b", "write": "*", "action": "RIGHT" },
+        { "read": "c", "to_state": "scan_c", "write": "*", "action": "RIGHT" },
+        { "read": ".", "to_state": "HALT", "write": "y", "action": "RIGHT" },
+        { "read": "*", "to_state": "succeed", "write": "*", "action": "RIGHT" }
+    ],
+    "scan_a": [
+        { "read": "a", "to_state": "scan_a", "write": "a", "action": "RIGHT" },
+        { "read": "b", "to_state": "scan_a", "write": "b", "action": "RIGHT" },
+        { "read": "c", "to_state": "scan_a", "write": "c", "action": "RIGHT" },
+        { "read": ".", "to_state": "assert_a", "write": ".", "action": "LEFT" },
+        { "read": "*", "to_state": "assert_a", "write": "*", "action": "LEFT" }
+    ],
+    "scan_b": [
+        { "read": "a", "to_state": "scan_b", "write": "a", "action": "RIGHT" },
+        { "read": "b", "to_state": "scan_b", "write": "b", "action": "RIGHT" },
+        { "read": "c", "to_state": "scan_b", "write": "c", "action": "RIGHT" },
+        { "read": ".", "to_state": "assert_b", "write": ".", "action": "LEFT" },
+        { "read": "*", "to_state": "assert_b", "write": "*", "action": "LEFT" }
+    ],
+    "scan_c": [
+        { "read": "a", "to_state": "scan_c", "write": "a", "action": "RIGHT" },
+        { "read": "b", "to_state": "scan_c", "write": "b", "action": "RIGHT" },
+        { "read": "c", "to_state": "scan_c", "write": "c", "action": "RIGHT" },
+        { "read": ".", "to_state": "assert_c", "write": ".", "action": "LEFT" },
+        { "read": "*", "to_state": "assert_c", "write": "*", "action": "LEFT" }
+    ],
+    "assert_a": [
+        { "read": "a", "to_state": "return", "write": "*", "action": "LEFT" },
+        { "read": "b", "to_state": "fail", "write": "b", "action": "RIGHT" },
+        { "read": "c", "to_state": "fail", "write": "c", "action": "RIGHT" },
+        { "read": ".", "to_state": "fail", "write": ".", "action": "RIGHT" },
+        { "read": "*", "to_state": "succeed", "write": "*", "action": "RIGHT" }
+    ],
+    "assert_b": [
+        { "read": "b", "to_state": "return", "write": "*", "action": "LEFT" },
+        { "read": "a", "to_state": "fail", "write": "a", "action": "RIGHT" },
+        { "read": "c", "to_state": "fail", "write": "c", "action": "RIGHT" },
+        { "read": ".", "to_state": "fail", "write": ".", "action": "RIGHT" },
+        { "read": "*", "to_state": "succeed", "write": "*", "action": "RIGHT" }
+    ],
+    "assert_c": [
+        { "read": "c", "to_state": "return", "write": "*", "action": "LEFT" },
+        { "read": "a", "to_state": "fail", "write": "a", "action": "RIGHT" },
+        { "read": "b", "to_state": "fail", "write": "b", "action": "RIGHT" },
+        { "read": ".", "to_state": "fail", "write": ".", "action": "RIGHT" },
+        { "read": "*", "to_state": "succeed", "write": "*", "action": "RIGHT" }
+    ],
+    "fail": [
+        { "read": "a", "to_state": "fail", "write": "a", "action": "RIGHT" },
+        { "read": "b", "to_state": "fail", "write": "b", "action": "RIGHT" },
+        { "read": "c", "to_state": "fail", "write": "c", "action": "RIGHT" },
+        { "read": "*", "to_state": "fail", "write": "*", "action": "RIGHT" },
+        { "read": ".", "to_state": "HALT", "write": "n", "action": "RIGHT" }
+    ],
+    "succeed": [
+        { "read": "a", "to_state": "succeed", "write": "a", "action": "RIGHT" },
+        { "read": "b", "to_state": "succeed", "write": "b", "action": "RIGHT" },
+        { "read": "c", "to_state": "succeed", "write": "c", "action": "RIGHT" },
+        { "read": "*", "to_state": "succeed", "write": "*", "action": "RIGHT" },
+        { "read": ".", "to_state": "HALT", "write": "y", "action": "RIGHT" }
+    ],
+    "return": [
+        { "read": "a", "to_state": "return", "write": "a", "action": "LEFT" },
+        { "read": "b", "to_state": "return", "write": "b", "action": "LEFT" },
+        { "read": "c", "to_state": "return", "write": "c", "action": "LEFT" },
+        { "read": "*", "to_state": "start", "write": "*", "action": "RIGHT" }
+    ]
+}
+}
