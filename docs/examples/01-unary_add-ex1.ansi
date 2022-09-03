@@ -1,0 +1,30 @@
+$ stack run machines/01-unary_add.json "111+1="
+********************************************************************************
+*                                                                              *
+*                                   unary_add                                  *
+*                                                                              *
+********************************************************************************
+Alphabet: [ 1, ., +, = ]
+States: [ scan, add_one, HALT ]
+Initial: scan
+Finals: [ HALT ]
+Transitions: [ (add_one, +) -> (add_one, ., RIGHT)
+             , (add_one, .) -> (add_one, 1, RIGHT)
+             , (add_one, 1) -> (add_one, +, LEFT)
+             , (add_one, =) -> (HALT, ., LEFT)
+             , (scan, +) -> (add_one, ., RIGHT)
+             , (scan, .) -> (HALT, ., RIGHT)
+             , (scan, 1) -> (scan, 1, RIGHT)
+             , (scan, =) -> (HALT, ., RIGHT) ]
+********************************************************************************
+0   [[1;37m[41m1[0m11+1=......]  (scan, 1) -> (scan, 1, RIGHT)
+1   [1[1;37m[41m1[0m1+1=......]  (scan, 1) -> (scan, 1, RIGHT)
+2   [11[1;37m[41m1[0m+1=......]  (scan, 1) -> (scan, 1, RIGHT)
+3   [111[1;37m[41m+[0m1=......]  (scan, +) -> (add_one, ., RIGHT)
+4   [111.[1;37m[41m1[0m=......]  (add_one, 1) -> (add_one, +, LEFT)
+5   [111[1;37m[41m.[0m+=......]  (add_one, .) -> (add_one, 1, RIGHT)
+6   [1111[1;37m[41m+[0m=......]  (add_one, +) -> (add_one, ., RIGHT)
+7   [1111.[1;37m[41m=[0m......]  (add_one, =) -> (HALT, ., LEFT)
+8   [1111[1;37m[41m.[0m.......]  
+
+Used: 8 steps, 6 tape cells

@@ -1,0 +1,97 @@
+$ stack run machines/02-palindrome.json "abcba"
+********************************************************************************
+*                                                                              *
+*                                   palindrome                                 *
+*                                                                              *
+********************************************************************************
+Alphabet: [ a, b, c, ., y, n, * ]
+States: [ start
+        , return
+        , fail
+        , succeed
+        , HALT
+        , scan_a
+        , scan_b
+        , scan_c
+        , assert_a
+        , assert_b
+        , assert_c ]
+Initial: start
+Finals: [ HALT ]
+Transitions: [ (assert_a, *) -> (succeed, *, RIGHT)
+             , (assert_a, .) -> (fail, ., RIGHT)
+             , (assert_a, a) -> (return, *, LEFT)
+             , (assert_a, b) -> (fail, b, RIGHT)
+             , (assert_a, c) -> (fail, c, RIGHT)
+             , (assert_b, *) -> (succeed, *, RIGHT)
+             , (assert_b, .) -> (fail, ., RIGHT)
+             , (assert_b, a) -> (fail, a, RIGHT)
+             , (assert_b, b) -> (return, *, LEFT)
+             , (assert_b, c) -> (fail, c, RIGHT)
+             , (assert_c, *) -> (succeed, *, RIGHT)
+             , (assert_c, .) -> (fail, ., RIGHT)
+             , (assert_c, a) -> (fail, a, RIGHT)
+             , (assert_c, b) -> (fail, b, RIGHT)
+             , (assert_c, c) -> (return, *, LEFT)
+             , (fail, *) -> (fail, *, RIGHT)
+             , (fail, .) -> (HALT, n, RIGHT)
+             , (fail, a) -> (fail, a, RIGHT)
+             , (fail, b) -> (fail, b, RIGHT)
+             , (fail, c) -> (fail, c, RIGHT)
+             , (return, *) -> (start, *, RIGHT)
+             , (return, a) -> (return, a, LEFT)
+             , (return, b) -> (return, b, LEFT)
+             , (return, c) -> (return, c, LEFT)
+             , (scan_a, *) -> (assert_a, *, LEFT)
+             , (scan_a, .) -> (assert_a, ., LEFT)
+             , (scan_a, a) -> (scan_a, a, RIGHT)
+             , (scan_a, b) -> (scan_a, b, RIGHT)
+             , (scan_a, c) -> (scan_a, c, RIGHT)
+             , (scan_b, *) -> (assert_b, *, LEFT)
+             , (scan_b, .) -> (assert_b, ., LEFT)
+             , (scan_b, a) -> (scan_b, a, RIGHT)
+             , (scan_b, b) -> (scan_b, b, RIGHT)
+             , (scan_b, c) -> (scan_b, c, RIGHT)
+             , (scan_c, *) -> (assert_c, *, LEFT)
+             , (scan_c, .) -> (assert_c, ., LEFT)
+             , (scan_c, a) -> (scan_c, a, RIGHT)
+             , (scan_c, b) -> (scan_c, b, RIGHT)
+             , (scan_c, c) -> (scan_c, c, RIGHT)
+             , (start, *) -> (succeed, *, RIGHT)
+             , (start, .) -> (HALT, y, RIGHT)
+             , (start, a) -> (scan_a, *, RIGHT)
+             , (start, b) -> (scan_b, *, RIGHT)
+             , (start, c) -> (scan_c, *, RIGHT)
+             , (succeed, *) -> (succeed, *, RIGHT)
+             , (succeed, .) -> (HALT, y, RIGHT)
+             , (succeed, a) -> (succeed, a, RIGHT)
+             , (succeed, b) -> (succeed, b, RIGHT)
+             , (succeed, c) -> (succeed, c, RIGHT) ]
+********************************************************************************
+0   [[1;37m[41ma[0mbcba.......]  (start, a) -> (scan_a, *, RIGHT)
+1   [*[1;37m[41mb[0mcba.......]  (scan_a, b) -> (scan_a, b, RIGHT)
+2   [*b[1;37m[41mc[0mba.......]  (scan_a, c) -> (scan_a, c, RIGHT)
+3   [*bc[1;37m[41mb[0ma.......]  (scan_a, b) -> (scan_a, b, RIGHT)
+4   [*bcb[1;37m[41ma[0m.......]  (scan_a, a) -> (scan_a, a, RIGHT)
+5   [*bcba[1;37m[41m.[0m......]  (scan_a, .) -> (assert_a, ., LEFT)
+6   [*bcb[1;37m[41ma[0m.......]  (assert_a, a) -> (return, *, LEFT)
+7   [*bc[1;37m[41mb[0m*.......]  (return, b) -> (return, b, LEFT)
+8   [*b[1;37m[41mc[0mb*.......]  (return, c) -> (return, c, LEFT)
+9   [*[1;37m[41mb[0mcb*.......]  (return, b) -> (return, b, LEFT)
+10  [[1;37m[41m*[0mbcb*.......]  (return, *) -> (start, *, RIGHT)
+11  [*[1;37m[41mb[0mcb*.......]  (start, b) -> (scan_b, *, RIGHT)
+12  [**[1;37m[41mc[0mb*.......]  (scan_b, c) -> (scan_b, c, RIGHT)
+13  [**c[1;37m[41mb[0m*.......]  (scan_b, b) -> (scan_b, b, RIGHT)
+14  [**cb[1;37m[41m*[0m.......]  (scan_b, *) -> (assert_b, *, LEFT)
+15  [**c[1;37m[41mb[0m*.......]  (assert_b, b) -> (return, *, LEFT)
+16  [**[1;37m[41mc[0m**.......]  (return, c) -> (return, c, LEFT)
+17  [*[1;37m[41m*[0mc**.......]  (return, *) -> (start, *, RIGHT)
+18  [**[1;37m[41mc[0m**.......]  (start, c) -> (scan_c, *, RIGHT)
+19  [***[1;37m[41m*[0m*.......]  (scan_c, *) -> (assert_c, *, LEFT)
+20  [**[1;37m[41m*[0m**.......]  (assert_c, *) -> (succeed, *, RIGHT)
+21  [***[1;37m[41m*[0m*.......]  (succeed, *) -> (succeed, *, RIGHT)
+22  [****[1;37m[41m*[0m.......]  (succeed, *) -> (succeed, *, RIGHT)
+23  [*****[1;37m[41m.[0m......]  (succeed, .) -> (HALT, y, RIGHT)
+24  [*****y[1;37m[41m.[0m.....]  
+
+Used: 24 steps, 7 tape cells

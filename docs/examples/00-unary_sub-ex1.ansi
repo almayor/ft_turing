@@ -1,0 +1,46 @@
+$ stack run machines/00-unary_sub.json "111-11="
+********************************************************************************
+*                                                                              *
+*                                   unary_sub                                  *
+*                                                                              *
+********************************************************************************
+Alphabet: [ 1, ., -, = ]
+States: [ scanright, eraseone, subone, skip, HALT ]
+Initial: scanright
+Finals: [ HALT ]
+Transitions: [ (eraseone, -) -> (HALT, ., LEFT)
+             , (eraseone, 1) -> (subone, =, LEFT)
+             , (scanright, -) -> (scanright, -, RIGHT)
+             , (scanright, .) -> (scanright, ., RIGHT)
+             , (scanright, 1) -> (scanright, 1, RIGHT)
+             , (scanright, =) -> (eraseone, ., LEFT)
+             , (skip, .) -> (skip, ., LEFT)
+             , (skip, 1) -> (scanright, ., RIGHT)
+             , (subone, -) -> (skip, -, LEFT)
+             , (subone, 1) -> (subone, 1, LEFT) ]
+********************************************************************************
+0   [[1;37m[41m1[0m11-11=.....]  (scanright, 1) -> (scanright, 1, RIGHT)
+1   [1[1;37m[41m1[0m1-11=.....]  (scanright, 1) -> (scanright, 1, RIGHT)
+2   [11[1;37m[41m1[0m-11=.....]  (scanright, 1) -> (scanright, 1, RIGHT)
+3   [111[1;37m[41m-[0m11=.....]  (scanright, -) -> (scanright, -, RIGHT)
+4   [111-[1;37m[41m1[0m1=.....]  (scanright, 1) -> (scanright, 1, RIGHT)
+5   [111-1[1;37m[41m1[0m=.....]  (scanright, 1) -> (scanright, 1, RIGHT)
+6   [111-11[1;37m[41m=[0m.....]  (scanright, =) -> (eraseone, ., LEFT)
+7   [111-1[1;37m[41m1[0m......]  (eraseone, 1) -> (subone, =, LEFT)
+8   [111-[1;37m[41m1[0m=......]  (subone, 1) -> (subone, 1, LEFT)
+9   [111[1;37m[41m-[0m1=......]  (subone, -) -> (skip, -, LEFT)
+10  [11[1;37m[41m1[0m-1=......]  (skip, 1) -> (scanright, ., RIGHT)
+11  [11.[1;37m[41m-[0m1=......]  (scanright, -) -> (scanright, -, RIGHT)
+12  [11.-[1;37m[41m1[0m=......]  (scanright, 1) -> (scanright, 1, RIGHT)
+13  [11.-1[1;37m[41m=[0m......]  (scanright, =) -> (eraseone, ., LEFT)
+14  [11.-[1;37m[41m1[0m.......]  (eraseone, 1) -> (subone, =, LEFT)
+15  [11.[1;37m[41m-[0m=.......]  (subone, -) -> (skip, -, LEFT)
+16  [11[1;37m[41m.[0m-=.......]  (skip, .) -> (skip, ., LEFT)
+17  [1[1;37m[41m1[0m.-=.......]  (skip, 1) -> (scanright, ., RIGHT)
+18  [1.[1;37m[41m.[0m-=.......]  (scanright, .) -> (scanright, ., RIGHT)
+19  [1..[1;37m[41m-[0m=.......]  (scanright, -) -> (scanright, -, RIGHT)
+20  [1..-[1;37m[41m=[0m.......]  (scanright, =) -> (eraseone, ., LEFT)
+21  [1..[1;37m[41m-[0m........]  (eraseone, -) -> (HALT, ., LEFT)
+22  [1.[1;37m[41m.[0m.........]  
+
+Used: 22 steps, 7 tape cells

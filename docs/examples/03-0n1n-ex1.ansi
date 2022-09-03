@@ -1,0 +1,65 @@
+$ stack run machines/03-0n1n.json "00111"
+********************************************************************************
+*                                                                              *
+*                                      0n1n                                    *
+*                                                                              *
+********************************************************************************
+Alphabet: [ 0, 1, y, n, ., * ]
+States: [ start, fail, return, HALT, scan0, scan1, delete0, delete1 ]
+Initial: start
+Finals: [ HALT ]
+Transitions: [ (delete0, *) -> (delete0, *, RIGHT)
+             , (delete0, .) -> (HALT, y, RIGHT)
+             , (delete0, 0) -> (scan0, *, RIGHT)
+             , (delete0, 1) -> (fail, 1, RIGHT)
+             , (delete1, *) -> (delete1, *, RIGHT)
+             , (delete1, .) -> (HALT, n, RIGHT)
+             , (delete1, 1) -> (scan1, *, RIGHT)
+             , (fail, *) -> (fail, *, RIGHT)
+             , (fail, .) -> (HALT, n, RIGHT)
+             , (fail, 0) -> (fail, 0, RIGHT)
+             , (fail, 1) -> (fail, 1, RIGHT)
+             , (return, *) -> (return, *, LEFT)
+             , (return, .) -> (delete0, ., RIGHT)
+             , (return, 0) -> (return, 0, LEFT)
+             , (return, 1) -> (return, 1, LEFT)
+             , (scan0, *) -> (delete1, *, RIGHT)
+             , (scan0, .) -> (HALT, n, RIGHT)
+             , (scan0, 0) -> (scan0, 0, RIGHT)
+             , (scan0, 1) -> (scan1, *, RIGHT)
+             , (scan1, *) -> (fail, *, RIGHT)
+             , (scan1, .) -> (return, ., LEFT)
+             , (scan1, 0) -> (fail, 0, RIGHT)
+             , (scan1, 1) -> (scan1, 1, RIGHT)
+             , (start, 0) -> (scan0, ., RIGHT)
+             , (start, 1) -> (fail, *, RIGHT) ]
+********************************************************************************
+0   [[1;37m[41m0[0m0111.......]  (start, 0) -> (scan0, ., RIGHT)
+1   [.[1;37m[41m0[0m111.......]  (scan0, 0) -> (scan0, 0, RIGHT)
+2   [.0[1;37m[41m1[0m11.......]  (scan0, 1) -> (scan1, *, RIGHT)
+3   [.0*[1;37m[41m1[0m1.......]  (scan1, 1) -> (scan1, 1, RIGHT)
+4   [.0*1[1;37m[41m1[0m.......]  (scan1, 1) -> (scan1, 1, RIGHT)
+5   [.0*11[1;37m[41m.[0m......]  (scan1, .) -> (return, ., LEFT)
+6   [.0*1[1;37m[41m1[0m.......]  (return, 1) -> (return, 1, LEFT)
+7   [.0*[1;37m[41m1[0m1.......]  (return, 1) -> (return, 1, LEFT)
+8   [.0[1;37m[41m*[0m11.......]  (return, *) -> (return, *, LEFT)
+9   [.[1;37m[41m0[0m*11.......]  (return, 0) -> (return, 0, LEFT)
+10  [[1;37m[41m.[0m0*11.......]  (return, .) -> (delete0, ., RIGHT)
+11  [.[1;37m[41m0[0m*11.......]  (delete0, 0) -> (scan0, *, RIGHT)
+12  [.*[1;37m[41m*[0m11.......]  (scan0, *) -> (delete1, *, RIGHT)
+13  [.**[1;37m[41m1[0m1.......]  (delete1, 1) -> (scan1, *, RIGHT)
+14  [.***[1;37m[41m1[0m.......]  (scan1, 1) -> (scan1, 1, RIGHT)
+15  [.***1[1;37m[41m.[0m......]  (scan1, .) -> (return, ., LEFT)
+16  [.***[1;37m[41m1[0m.......]  (return, 1) -> (return, 1, LEFT)
+17  [.**[1;37m[41m*[0m1.......]  (return, *) -> (return, *, LEFT)
+18  [.*[1;37m[41m*[0m*1.......]  (return, *) -> (return, *, LEFT)
+19  [.[1;37m[41m*[0m**1.......]  (return, *) -> (return, *, LEFT)
+20  [[1;37m[41m.[0m***1.......]  (return, .) -> (delete0, ., RIGHT)
+21  [.[1;37m[41m*[0m**1.......]  (delete0, *) -> (delete0, *, RIGHT)
+22  [.*[1;37m[41m*[0m*1.......]  (delete0, *) -> (delete0, *, RIGHT)
+23  [.**[1;37m[41m*[0m1.......]  (delete0, *) -> (delete0, *, RIGHT)
+24  [.***[1;37m[41m1[0m.......]  (delete0, 1) -> (fail, 1, RIGHT)
+25  [.***1[1;37m[41m.[0m......]  (fail, .) -> (HALT, n, RIGHT)
+26  [.***1n[1;37m[41m.[0m.....]  
+
+Used: 26 steps, 7 tape cells

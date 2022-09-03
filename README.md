@@ -18,18 +18,14 @@ where
 - `machine` is a file describing the machine
 - `input` is a string of symbols, representing initial tape contents.
 
-For example,
-```sh
-$ stack run machines/00-unary_sub.json "111-11="
-```
-
 ## Provided machines
 
 A few machines capable of executing simple programs can be found in `machines/`:
-* `00-unary_sub`
+* `00-unary_sub` – A machine able to compute an unary addition.
 
 <details>
 <summary>Example</summary>
+![](docs/examples/00-unary_sub-ex1.svg)
 </details>
 
 ## Acknowledgements
