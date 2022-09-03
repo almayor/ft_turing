@@ -26,8 +26,11 @@ $ stack run machines/00-unary_sub.json "111-11="
 ## Provided machines
 
 A few machines capable of executing simple programs can be found in `machines/`:
-* `00-unary_sub` -- unary subtraction
+* `00-unary_sub`
 
+<details>
+<summary>Example</summary>
+</details>
 
 ## Acknowledgements
 
