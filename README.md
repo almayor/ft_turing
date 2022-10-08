@@ -18,6 +18,13 @@ where
 - `machine` is a file describing the machine
 - `input` is a string of symbols, representing initial tape contents.
 
+Alternatively, you can pull the corresponding [Docker image](https://hub.docker.com/repository/docker/almayor/ft_turing) or build your own using the provided Dockerfile.
+
+```sh
+$ docker pull almayor/ft_turing:latest # or docker build -t ft_turing .
+$ docker run almayor/ft_turing:latest <machine> <input>
+```
+
 ## Machines
 
 A few machines capable of executing simple programs can be found in `machines/`:
