@@ -1,4 +1,4 @@
-FROM fpco/stack-build:lts-19.28
+FROM fpco/stack-build
 ADD ./ /app
 WORKDIR /app
 RUN stack build
